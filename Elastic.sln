@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic", "Elastic\Elastic.csproj", "{DC2A01A0-5579-4BBA-98EA-4DF90644D585}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticWithNest", "ElasticWithNest\ElasticWithNest.csproj", "{2F50C192-33F0-4EE8-8586-6029CD4D6BAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{DC2A01A0-5579-4BBA-98EA-4DF90644D585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC2A01A0-5579-4BBA-98EA-4DF90644D585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC2A01A0-5579-4BBA-98EA-4DF90644D585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F50C192-33F0-4EE8-8586-6029CD4D6BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F50C192-33F0-4EE8-8586-6029CD4D6BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F50C192-33F0-4EE8-8586-6029CD4D6BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F50C192-33F0-4EE8-8586-6029CD4D6BAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
