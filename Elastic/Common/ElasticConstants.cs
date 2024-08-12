@@ -5,6 +5,7 @@ namespace Elastic.Common;
 public static class ElasticConstants
 {
     public const string IndexName = "my_index";
+    public const string ComplexIndexName = "complex-index";
     public static readonly Guid Id = Guid.Parse("82157646-b752-4899-904d-562dfd02f20c");
 
     public static ElasticsearchClient GetClient()

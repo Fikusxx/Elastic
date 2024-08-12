@@ -1,0 +1,75 @@
+// GET /complex-index/_mapping
+
+{
+  "complex-index": {
+    "mappings": {
+      "properties": {
+        "bool": {
+          "type": "boolean"
+        },
+        "dateOnly": {
+          "type": "date"
+        },
+        "dateTime": {
+          "type": "date"
+        },
+        "description": {
+          "type": "text"
+        },
+        "double": {
+          "type": "double",
+          "coerce": false
+        },
+        "enum": {
+          "type": "keyword"
+        },
+        "float": {
+          "type": "float",
+          "coerce": false
+        },
+        "geoPoint": {
+          "type": "geo_point"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "innerOne": {
+          "properties": {
+            "value": {
+              "type": "text"
+            },
+            "values": {
+              "type": "integer"
+            }
+          }
+        },
+        "innerTwos": {
+          "type": "nested",
+          "properties": {
+            "value": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        },
+        "int": {
+          "type": "integer"
+        },
+        "ipAddress": {
+          "type": "ip"
+        },
+        "short": {
+          "type": "short"
+        },
+        "tags": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}

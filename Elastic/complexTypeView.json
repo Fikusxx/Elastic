@@ -1,0 +1,47 @@
+// GET /complex-index/_doc/1
+
+{
+  "_index": "complex-index",
+  "_id": "1",
+  "_version": 1,
+  "_seq_no": 0,
+  "_primary_term": 1,
+  "found": true,
+  "_source": {
+    "id": 1,
+    "description": "my description",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "enum": "One",
+    "int": 1,
+    "float": 1,
+    "double": 1,
+    "short": 1,
+    "dateTime": "2024-08-12T16:13:24.121034+03:00",
+    "dateOnly": "2024-08-12",
+    "innerOne": {
+      "value": "inner one value",
+      "values": [
+        1,
+        2,
+        3
+      ]
+    },
+    "innerTwos": [
+      {
+        "value": "inner two value #1"
+      },
+      {
+        "value": "inner two value #2"
+      }
+    ],
+    "bool": true,
+    "geoPoint": [
+      55.55,
+      66.66
+    ],
+    "ipAddress": "127.0.0.1"
+  }
+}
