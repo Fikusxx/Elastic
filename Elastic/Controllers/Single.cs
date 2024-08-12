@@ -14,7 +14,6 @@ public sealed class Single : ControllerBase
     public async Task<IActionResult> GetSingle()
     {
         var response = await client.GetAsync<Game>(id: 1, index => index.Index(ElasticConstants.IndexName));
-        // var response = await client.GetAsync<Game>(id: ElasticConstants.Id.ToString(), index => index.Index(ElasticConstants.IndexName));
 
         if (response.IsValidResponse)
         {
@@ -29,7 +28,6 @@ public sealed class Single : ControllerBase
     {
         var game = new Game
         {
-            // Id = ElasticConstants.Id.ToString(),
             Id = 1,
             Title = "Ori",
             Price = 69
@@ -43,12 +41,16 @@ public sealed class Single : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update()
     {
-        var game = (await client.GetAsync<Game>(id: 1, index => index.Index(ElasticConstants.IndexName))).Source;
-        // var game = (await client.GetAsync<Game>(id: ElasticConstants.Id.ToString(), index => index.Index(ElasticConstants.IndexName))).Source;
+        var resource = await client.GetAsync<Game>(id: 1, index => index.Index(ElasticConstants.IndexName));
+        var game = resource.Source;
         game!.Title = "Hollow Knight";
-
-        var response = await client.UpdateAsync<Game, Game>(index: ElasticConstants.IndexName, id: 1, x => x.Doc(game));
-        // var response = await client.UpdateAsync<Game, Game>(index: ElasticConstants.IndexName, id: ElasticConstants.Id.ToString(), x => x.Doc(game));
+        
+        var response = await client.UpdateAsync<Game, Game>(index: ElasticConstants.IndexName, id: 1, x =>
+        {
+            x.Doc(game);
+            x.IfPrimaryTerm(resource.PrimaryTerm); // optimistic concurrency
+            x.IfSeqNo(resource.SeqNo); // optimistic concurrency
+        });
 
         return Ok(response);
     }
@@ -58,7 +60,6 @@ public sealed class Single : ControllerBase
     public async Task<IActionResult> Delete()
     {
         var response = await client.DeleteAsync(index: ElasticConstants.IndexName, id: 1);
-        // var response = await client.DeleteAsync(index: ElasticConstants.IndexName, id: ElasticConstants.Id.ToString());
 
         return Ok(response);
     }

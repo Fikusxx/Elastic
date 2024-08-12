@@ -12,6 +12,15 @@ public sealed class Many : ControllerBase
     private readonly ElasticsearchClient client = ElasticConstants.GetClient();
 
     [HttpGet]
+    [Route("all")]
+    public async Task<IActionResult> GetAll()
+    {
+        var result = (await client.SearchAsync<Game>(indices: ElasticConstants.IndexName)).Documents;
+
+        return Ok(result);
+    }
+
+    [HttpGet]
     [Route("lambda")]
     public async Task<IActionResult> Lambda()
     {
@@ -23,8 +32,7 @@ public sealed class Many : ControllerBase
             .From(0)
             .Size(10)
             // .Query(query => query.Term(t =>
-            //     t.Field(f => f.Id)
-            //         .Value(1))));
+            //     t.Field(f => f.Id).Value(1))));
             .Query(query => query.Match(t =>
                 t.Field(f => f.Title).Query("Ori"))));
 
@@ -58,7 +66,6 @@ public sealed class Many : ControllerBase
             x.Query(q => q
                 .Bool(b => b
                     .Filter(f => f
-                        // .Term(t => t.Field(field => field.Title).Value("Ori")))));
                         .Match(t => t.Field(field => field.Title).Query("Ori")))));
             x.Size(20);
             x.Sort(sort => sort.Field(f => f.Price, c => c.Order(SortOrder.Asc)));
@@ -86,12 +93,46 @@ public sealed class Many : ControllerBase
                 .BackOffRetries(backOffRetries: 5)
                 .BackOffTime(TimeSpan.FromSeconds(10))
                 .ContinueAfterDroppedDocuments(proceed: true)
-                .DroppedDocumentCallback((item, game) => { Console.WriteLine(item.Error?.Reason); })
+                .DroppedDocumentCallback((item, _) => { Console.WriteLine(item.Error?.Reason); })
                 .MaxDegreeOfParallelism(Environment.ProcessorCount)
                 .Size(size: 100));
 
         // thus needs to be "awaited"
-        var response = bulkAll.Wait(TimeSpan.FromMinutes(1), x => { Console.WriteLine("Done"); });
+        var response = bulkAll.Wait(TimeSpan.FromMinutes(1), _ => { Console.WriteLine("Done"); });
+
+        return Ok(response);
+    }
+
+    [HttpPut]
+    [Route("query")]
+    public async Task<IActionResult> UpdateByQuery()
+    {
+        var response = await client.UpdateByQueryAsync<Game>(indices: ElasticConstants.IndexName, x =>
+        {
+            x.Query(q => q
+                    .Match(m => m
+                        .Field(f => f.Title).Query("Ori")))
+                .Script(s => s
+                    .Source("ctx._source.price = params.price;")
+                    .Lang(ScriptLanguage.Painless)
+                    .Params(p => p.Add("price", 777)))
+                .Conflicts(Conflicts.Proceed); // is NOT transactional, ie partial failures are NOT rolled back
+        });
+
+        return Ok(response);
+    }
+    
+    [HttpDelete]
+    [Route("query")]
+    public async Task<IActionResult> DeleteByQuery()
+    {
+        var response = await client.DeleteByQueryAsync<Game>(indices: ElasticConstants.IndexName, x =>
+        {
+            x.Query(q => q
+                    .Match(m => m
+                        .Field(f => f.Title).Query("Ori")))
+                .Conflicts(Conflicts.Proceed); // is NOT transactional, ie partial failures are NOT rolled back
+        });
 
         return Ok(response);
     }

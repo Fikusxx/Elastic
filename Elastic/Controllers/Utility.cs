@@ -38,7 +38,13 @@ public sealed class Utility : ControllerBase
                         .IntegerNumber(n => n.Price)))
                 .Settings(s => s
                     .NumberOfShards(1)
-                    .NumberOfReplicas(0)); // requires >1 nodes, default 1
+                    .NumberOfReplicas(0) // requires >1 nodes, default 1
+                    
+                    // default 60s. Old optimistic concurrency control mechanism.
+                    // Defines for how long _version value is kept when document is deleted.
+                    // For scenarios when a new document with the same id is created right away
+                    .GcDeletes(TimeSpan.FromSeconds(60))); 
+                                                            
         });
 
         return Ok(response);
