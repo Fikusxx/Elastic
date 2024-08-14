@@ -5,7 +5,8 @@
     "mappings": {
       "properties": {
         "bool": {
-          "type": "boolean"
+          "type": "boolean",
+          "index": false
         },
         "dateOnly": {
           "type": "date"
@@ -61,7 +62,8 @@
           "type": "integer"
         },
         "ipAddress": {
-          "type": "ip"
+          "type": "ip",
+          "null_value": "127.0.0.1"
         },
         "short": {
           "type": "short"

@@ -16,7 +16,7 @@ public sealed class ComplexType
     public required List<InnerTwo> InnerTwos { get; set; }
     public required bool Bool { get; set; }
     public required double[] GeoPoint { get; set; }
-    public required string IpAddress { get; set; }
+    public string? IpAddress { get; set; }
 }
 
 public sealed class InnerOne

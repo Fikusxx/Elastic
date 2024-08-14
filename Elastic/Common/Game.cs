@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Elastic.Common;
 
 public sealed class Game

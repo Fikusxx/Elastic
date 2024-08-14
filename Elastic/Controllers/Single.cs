@@ -13,7 +13,7 @@ public sealed class Single : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetSingle()
     {
-        var response = await client.GetAsync<Game>(id: 1, index => index.Index(ElasticConstants.IndexName));
+        var response = await client.GetAsync<Game>(id: 1);
 
         if (response.IsValidResponse)
         {
@@ -33,7 +33,7 @@ public sealed class Single : ControllerBase
             Price = 69
         };
 
-        var response = await client.IndexAsync(document: game, index: ElasticConstants.IndexName);
+        var response = await client.IndexAsync<Game>(document: game);
 
         return Ok(response);
     }
@@ -41,11 +41,11 @@ public sealed class Single : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update()
     {
-        var resource = await client.GetAsync<Game>(id: 1, index => index.Index(ElasticConstants.IndexName));
+        var resource = await client.GetAsync<Game>(id: 1);
         var game = resource.Source;
         game!.Title = "Hollow Knight";
         
-        var response = await client.UpdateAsync<Game, Game>(index: ElasticConstants.IndexName, id: 1, x =>
+        var response = await client.UpdateAsync<Game, Game>(id: 1, x =>
         {
             x.Doc(game);
             x.IfPrimaryTerm(resource.PrimaryTerm); // optimistic concurrency
@@ -59,7 +59,7 @@ public sealed class Single : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete()
     {
-        var response = await client.DeleteAsync(index: ElasticConstants.IndexName, id: 1);
+        var response = await client.DeleteAsync<Game>(id: 1);
 
         return Ok(response);
     }

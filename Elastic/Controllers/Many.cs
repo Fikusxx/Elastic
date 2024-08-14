@@ -24,15 +24,12 @@ public sealed class Many : ControllerBase
     [Route("lambda")]
     public async Task<IActionResult> Lambda()
     {
-        // Term() ONLY works with Keyword type properties, ie fixed values, like Id, enum, etc
-        // Match() works with other types, ie like Where() linq
-        
         var response = await client.SearchAsync<Game>(x => x
             .Index(ElasticConstants.IndexName)
             .From(0)
             .Size(10)
             // .Query(query => query.Term(t =>
-            //     t.Field(f => f.Id).Value(1))));
+            //     t.Field(f => f.Title).Value("Ori"))));
             .Query(query => query.Match(t =>
                 t.Field(f => f.Title).Query("Ori"))));
 
