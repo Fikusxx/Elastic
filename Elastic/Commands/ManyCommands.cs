@@ -10,6 +10,15 @@ public class ManyCommands
         //         "match_all": { } 
         //     }
         // }
+        
+        // GET /orders/_search
+        // "query": {
+        //     "term": {
+        //         "title": {
+        //             "value": "ori"
+        //         }
+        //     }
+        // }
     }
     
     private class Update

@@ -15,60 +15,20 @@ public sealed class Many : ControllerBase
     [Route("all")]
     public async Task<IActionResult> GetAll()
     {
-        var result = (await client.SearchAsync<Game>(indices: ElasticConstants.IndexName)).Documents;
+        var simple = await client.SearchAsync<Game>(indices: ElasticConstants.IndexName);
 
-        return Ok(result);
-    }
-
-    [HttpGet]
-    [Route("lambda")]
-    public async Task<IActionResult> Lambda()
-    {
-        var response = await client.SearchAsync<Game>(x => x
+        var matchAll = await client.SearchAsync<Game>(x => x
             .Index(ElasticConstants.IndexName)
-            .From(0)
-            .Size(10)
-            // .Query(query => query.Term(t =>
-            //     t.Field(f => f.Title).Value("Ori"))));
-            .Query(query => query.Match(t =>
-                t.Field(f => f.Title).Query("Ori"))));
+            .Query(q => q.MatchAll(_ => { })));
 
-        return Ok(response.Documents);
-    }
-
-    [HttpGet]
-    [Route("search-request")]
-    public async Task<IActionResult> SearchRequest()
-    {
         var request = new SearchRequest(ElasticConstants.IndexName)
         {
-            From = 0,
-            Size = 10,
-            Query = new MatchQuery("title"!) { Query = "Ori" },
-            // Query = new TermQuery("title"!) { Value = "Ori" }
+            Query = new MatchAllQuery()
         };
 
-        var response = await client.SearchAsync<Game>(request);
+        var searchRequest = await client.SearchAsync<Game>(request);
 
-        return Ok(response.Documents);
-    }
-
-    [HttpGet]
-    [Route("bool")]
-    public async Task<IActionResult> Bool()
-    {
-        var response = await client.SearchAsync<Game>(x =>
-        {
-            x.Index(ElasticConstants.IndexName);
-            x.Query(q => q
-                .Bool(b => b
-                    .Filter(f => f
-                        .Match(t => t.Field(field => field.Title).Query("Ori")))));
-            x.Size(20);
-            x.Sort(sort => sort.Field(f => f.Price, c => c.Order(SortOrder.Asc)));
-        });
-
-        return Ok(response.Documents);
+        return Ok(new { Simple = simple.Documents, MatchAll = matchAll.Documents, SearchRequest = searchRequest.Documents });
     }
 
     [HttpPost]
@@ -118,7 +78,7 @@ public sealed class Many : ControllerBase
 
         return Ok(response);
     }
-    
+
     [HttpDelete]
     [Route("query")]
     public async Task<IActionResult> DeleteByQuery()
