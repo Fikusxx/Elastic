@@ -15,6 +15,7 @@ public sealed class Many : ControllerBase
     [Route("all")]
     public async Task<IActionResult> GetAll()
     {
+        // implicit MatchAll()
         var simple = await client.SearchAsync<Game>(indices: ElasticConstants.IndexName);
 
         var matchAll = await client.SearchAsync<Game>(x => x

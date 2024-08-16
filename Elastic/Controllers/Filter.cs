@@ -49,6 +49,7 @@ public class Filter : ControllerBase
     /// <summary>
     /// Ran against numeric, date, exact values
     /// Doesnt impact score relevance
+    /// Dates are stored as unix MILLISECONDS not SECONDS
     /// </summary>
     /// <returns></returns>
     [HttpGet]

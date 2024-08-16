@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Elastic.Controllers;
 
+/// <summary>
+/// http://localhost:5601/app/dev_tools#/console
+/// </summary>
 [ApiController]
 [Route("utility")]
 public sealed class Utility : ControllerBase

@@ -43,6 +43,9 @@ public sealed class Index : ControllerBase
         return Ok(new { response1, response2 });
     }
     
+    /// <summary>
+    /// TODO: custom filter, analyzer, synonyms
+    /// </summary>
     [HttpPost]
     [Route("create-complex-index")]
     public async Task<IActionResult> CreateComplexIndex()
